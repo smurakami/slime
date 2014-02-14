@@ -7,9 +7,12 @@ class Slime
     @color = 'rgba(0, 210, 255, 0.7)'
   draw: ->
     ctx.beginPath();
+    ctx.setTransform(1, 0, 0, 1, @x, @y)
     ctx.fillStyle = @color
-    ctx.arc(@x, @y, @r, 0, M.PI*2, true)
+    ctx.arc(0, 0, @r, 0, M.PI*2, true)
     ctx.fill()
+  update: ->
+    # @x++
 
 window.onload = ->
   canvas = document.getElementById('canvas')
@@ -22,8 +25,9 @@ window.onload = ->
   global.slime = slime = new Slime(width/2, height/2)
 
   mainLoop = ->
-    ctx.clearRect(0, 0, width, height)
+    ctx.clearRect(-width, -height, width*2, height*2)
     slime.draw()
+    slime.update()
     setTimeout(mainLoop, 1/fps)
 
   mainLoop()

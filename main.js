@@ -18,10 +18,13 @@
 
     Slime.prototype.draw = function() {
       ctx.beginPath();
+      ctx.setTransform(1, 0, 0, 1, this.x, this.y);
       ctx.fillStyle = this.color;
-      ctx.arc(this.x, this.y, this.r, 0, M.PI * 2, true);
+      ctx.arc(0, 0, this.r, 0, M.PI * 2, true);
       return ctx.fill();
     };
+
+    Slime.prototype.update = function() {};
 
     return Slime;
 
@@ -36,8 +39,9 @@
     fps = 30;
     global.slime = slime = new Slime(width / 2, height / 2);
     mainLoop = function() {
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(-width, -height, width * 2, height * 2);
       slime.draw();
+      slime.update();
       return setTimeout(mainLoop, 1 / fps);
     };
     return mainLoop();
