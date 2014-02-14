@@ -2,6 +2,38 @@ global = this
 M = Math
 ctx = null
 
+# vector class
+# @*_ : destructive method
+# @*  : not destructive method
+class _Vector
+  constructor: (@x, @y) ->
+  add : (v) -> new _Vector(@x + v.x, @y + v.y)
+  add_: (v) ->
+    @x += v.x
+    @y += v.y
+    return
+  sub : (v) -> new _Vector(@x - v.x, @y - v.y)
+  sub_: (v) ->
+    @x -= v.x
+    @y -= v.y
+    return
+  rotate : (rad) ->
+    x = M.cos(rad) * @x - M.sin(rad) * @y
+    y = M.sin(rad) * @x + M.cos(rad) * @y
+    return new _Vector(x, y)
+
+  rotate_: (rad) ->
+    x = M.cos(rad) * @x - M.sin(rad) * @y
+    y = M.sin(rad) * @x + M.cos(rad) * @y
+    @x = x
+    @y = y
+    return
+
+# wrapper
+Vector = (x, y) -> new _Vector(x, y)
+V = Vector
+
+# slime class
 class Slime
   constructor: (@x, @y, @r=50) ->
     @color = 'rgba(0, 210, 255, 0.7)'
@@ -12,7 +44,6 @@ class Slime
     ctx.arc(0, 0, @r, 0, M.PI*2, true)
     ctx.fill()
   update: ->
-    # @x++
 
 window.onload = ->
   canvas = document.getElementById('canvas')
