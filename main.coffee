@@ -31,7 +31,7 @@ class _Vector
 
 # wrapper
 Vector = (x, y) -> new _Vector(x, y)
-V = Vector
+global.V = Vector
 
 # slime class
 class Slime
@@ -41,8 +41,13 @@ class Slime
     ctx.beginPath();
     ctx.setTransform(1, 0, 0, 1, @x, @y)
     ctx.fillStyle = @color
-    ctx.arc(0, 0, @r, 0, M.PI*2, true)
-    ctx.fill()
+    v = Vector(0, @r)
+    ctx.moveTo(v.x, v.y)
+    for i in [0...3]
+      v.rotate_(M.PI*2/3)
+      ctx.lineTo(v.x, v.y)
+    ctx.stroke()
+    # ctx.fill()
   update: ->
 
 window.onload = ->
