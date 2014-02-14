@@ -2,6 +2,10 @@ global = this
 M = Math
 ctx = null
 
+# bezier curve with vector
+CanvasRenderingContext2D.prototype.vBezierCurveTo = (v1, v2, v3) ->
+  @bezierCurveTo(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y)
+
 # vector class
 # @*_ : destructive method
 # @*  : not destructive method
@@ -41,13 +45,16 @@ class Slime
     ctx.beginPath();
     ctx.setTransform(1, 0, 0, 1, @x, @y)
     ctx.fillStyle = @color
-    v = Vector(0, @r)
+    v = Vector(0, @r) # begin point
+    dv = v.rotate(M.PI/2) # begin speed
     ctx.moveTo(v.x, v.y)
     for i in [0...3]
-      v.rotate_(M.PI*2/3)
-      ctx.lineTo(v.x, v.y)
-    ctx.stroke()
-    # ctx.fill()
+      w = v.rotate(M.PI*2/3)
+      dw = w.rotate(M.PI/2)
+      ctx.vBezierCurveTo(v.add(dv), w.sub(dw), w)
+      v = w
+      dv = dw
+    ctx.fill()
   update: ->
 
 window.onload = ->

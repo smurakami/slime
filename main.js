@@ -8,6 +8,10 @@
 
   ctx = null;
 
+  CanvasRenderingContext2D.prototype.vBezierCurveTo = function(v1, v2, v3) {
+    return this.bezierCurveTo(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y);
+  };
+
   _Vector = (function() {
     function _Vector(x, y) {
       this.x = x;
@@ -66,17 +70,21 @@
     }
 
     Slime.prototype.draw = function() {
-      var i, v, _i;
+      var dv, dw, i, v, w, _i;
       ctx.beginPath();
       ctx.setTransform(1, 0, 0, 1, this.x, this.y);
       ctx.fillStyle = this.color;
       v = Vector(0, this.r);
+      dv = v.rotate(M.PI / 2);
       ctx.moveTo(v.x, v.y);
       for (i = _i = 0; _i < 3; i = ++_i) {
-        v.rotate_(M.PI * 2 / 3);
-        ctx.lineTo(v.x, v.y);
+        w = v.rotate(M.PI * 2 / 3);
+        dw = w.rotate(M.PI / 2);
+        ctx.vBezierCurveTo(v.add(dv), w.sub(dw), w);
+        v = w;
+        dv = dw;
       }
-      return ctx.stroke();
+      return ctx.fill();
     };
 
     Slime.prototype.update = function() {};
