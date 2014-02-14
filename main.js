@@ -36,6 +36,10 @@
       this.y -= v.y;
     };
 
+    _Vector.prototype.mul = function(k) {
+      return new _Vector(this.x * k, this.y * k);
+    };
+
     _Vector.prototype.rotate = function(rad) {
       var x, y;
       x = M.cos(rad) * this.x - M.sin(rad) * this.y;
@@ -70,16 +74,17 @@
     }
 
     Slime.prototype.draw = function() {
-      var dv, dw, i, v, w, _i;
+      var a, dv, dw, i, v, w, _i;
       ctx.beginPath();
       ctx.setTransform(1, 0, 0, 1, this.x, this.y);
       ctx.fillStyle = this.color;
       v = Vector(0, this.r);
-      dv = v.rotate(M.PI / 2);
+      a = M.sqrt(3) / 2;
+      dv = v.rotate(M.PI / 2).mul(a);
       ctx.moveTo(v.x, v.y);
       for (i = _i = 0; _i < 3; i = ++_i) {
         w = v.rotate(M.PI * 2 / 3);
-        dw = w.rotate(M.PI / 2);
+        dw = w.rotate(M.PI / 2).mul(a);
         ctx.vBezierCurveTo(v.add(dv), w.sub(dw), w);
         v = w;
         dv = dw;

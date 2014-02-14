@@ -21,11 +21,11 @@ class _Vector
     @x -= v.x
     @y -= v.y
     return
+  mul : (k) -> new _Vector(@x * k, @y * k)
   rotate : (rad) ->
     x = M.cos(rad) * @x - M.sin(rad) * @y
     y = M.sin(rad) * @x + M.cos(rad) * @y
     return new _Vector(x, y)
-
   rotate_: (rad) ->
     x = M.cos(rad) * @x - M.sin(rad) * @y
     y = M.sin(rad) * @x + M.cos(rad) * @y
@@ -46,14 +46,15 @@ class Slime
     ctx.setTransform(1, 0, 0, 1, @x, @y)
     ctx.fillStyle = @color
     v = Vector(0, @r) # begin point
-    dv = v.rotate(M.PI/2) # begin speed
+    a = M.sqrt(3)/2
+    dv = v.rotate(M.PI/2).mul(a) # begin tangent
     ctx.moveTo(v.x, v.y)
     for i in [0...3]
-      w = v.rotate(M.PI*2/3)
-      dw = w.rotate(M.PI/2)
+      w = v.rotate(M.PI*2/3) # next point
+      dw = w.rotate(M.PI/2).mul(a) # next tangent
       ctx.vBezierCurveTo(v.add(dv), w.sub(dw), w)
-      v = w
-      dv = dw
+      v = w # next point
+      dv = dw # next tangent
     ctx.fill()
   update: ->
 
